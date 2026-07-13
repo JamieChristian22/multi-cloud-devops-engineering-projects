@@ -1,1 +1,0 @@
-{"environment":"prod","aws_vpc_cidr":"10.30.0.0/16","azure_vnet_cidr":"10.130.0.0/16","gcp_vpc_cidr":"10.230.0.0/16","sizing_profile":"medium"}

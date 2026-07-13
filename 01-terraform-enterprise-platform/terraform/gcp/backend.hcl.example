@@ -1,2 +1,0 @@
-bucket="replace-with-gcs-state-bucket"
-prefix="gcp/terraform/state"
