@@ -1,0 +1,9 @@
+terraform {
+  backend "s3" {
+    bucket       = "replace-with-your-unique-terraform-state-bucket"
+    key          = "aws-cloud-native-stack/dev/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
