@@ -1,0 +1,1 @@
+{"environment":"staging","aws_vpc_cidr":"10.20.0.0/16","azure_vnet_cidr":"10.120.0.0/16","gcp_vpc_cidr":"10.220.0.0/16","sizing_profile":"small"}

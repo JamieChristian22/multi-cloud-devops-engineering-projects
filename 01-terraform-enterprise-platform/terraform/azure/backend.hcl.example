@@ -1,0 +1,4 @@
+resource_group_name="replace-with-state-resource-group"
+storage_account_name="replacewithstateaccount"
+container_name="tfstate"
+key="azure/terraform.tfstate"
