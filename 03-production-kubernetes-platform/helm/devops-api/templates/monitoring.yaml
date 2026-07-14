@@ -1,0 +1,30 @@
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata: {name: {{ include "devops-api.fullname" . }}, labels: {release: kube-prometheus-stack}}
+spec:
+ selector:
+  matchLabels:
+   {{- include "devops-api.selector" . | nindent 3 }}
+ endpoints: [{port: http, path: /metrics, interval: 30s}]
+---
+{{- end }}
+{{- if .Values.prometheusRule.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata: {name: {{ include "devops-api.fullname" . }}, labels: {release: kube-prometheus-stack}}
+spec:
+ groups:
+  - name: devops-api
+    rules:
+     - alert: DevOpsAPIHighErrorRate
+       expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / clamp_min(sum(rate(http_requests_total[5m])),0.01) > 0.05
+       for: 10m
+       labels: {severity: warning}
+       annotations: {summary: API 5xx rate exceeds 5 percent}
+     - alert: DevOpsAPIHighLatency
+       expr: histogram_quantile(0.95,sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5
+       for: 10m
+       labels: {severity: warning}
+       annotations: {summary: API p95 latency exceeds 500ms}
+{{- end }}

@@ -1,0 +1,4 @@
+replicaCount: 2
+env: {ENVIRONMENT: staging, APP_VERSION: 1.0.0}
+serviceMonitor: {enabled: true}
+prometheusRule: {enabled: true}

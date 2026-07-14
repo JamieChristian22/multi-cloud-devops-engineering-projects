@@ -1,0 +1,5 @@
+aws_region="us-east-1"
+project_name="devops-enterprise-api"
+environment="dev"
+container_port=8080
+desired_count=2

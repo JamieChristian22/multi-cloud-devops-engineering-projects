@@ -1,0 +1,6 @@
+replicaCount: 3
+env: {ENVIRONMENT: production, APP_VERSION: 1.0.0}
+autoscaling: {enabled: true, minReplicas: 3, maxReplicas: 10, targetCPUUtilizationPercentage: 65}
+podDisruptionBudget: {enabled: true, minAvailable: 2}
+serviceMonitor: {enabled: true}
+prometheusRule: {enabled: true}

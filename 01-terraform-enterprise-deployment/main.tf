@@ -1,0 +1,31 @@
+data "aws_availability_zones" "available"{state="available"}
+locals{name="${var.project_name}-${var.environment}" azs=slice(data.aws_availability_zones.available.names,0,2) tags={Project=var.project_name Environment=var.environment ManagedBy="Terraform"}}
+resource "aws_vpc" "main"{cidr_block=var.vpc_cidr enable_dns_support=true enable_dns_hostnames=true tags={Name=local.name}}
+resource "aws_internet_gateway" "main"{vpc_id=aws_vpc.main.id}
+resource "aws_subnet" "public"{for_each={for i,az in local.azs:i=>az} vpc_id=aws_vpc.main.id availability_zone=each.value cidr_block=cidrsubnet(var.vpc_cidr,4,each.key) map_public_ip_on_launch=true tags={Name="${local.name}-public-${each.value}"}}
+resource "aws_subnet" "private"{for_each={for i,az in local.azs:i=>az} vpc_id=aws_vpc.main.id availability_zone=each.value cidr_block=cidrsubnet(var.vpc_cidr,4,each.key+8) tags={Name="${local.name}-private-${each.value}"}}
+resource "aws_eip" "nat"{domain="vpc" depends_on=[aws_internet_gateway.main]}
+resource "aws_nat_gateway" "main"{allocation_id=aws_eip.nat.id subnet_id=values(aws_subnet.public)[0].id}
+resource "aws_route_table" "public"{vpc_id=aws_vpc.main.id route{cidr_block="0.0.0.0/0" gateway_id=aws_internet_gateway.main.id}}
+resource "aws_route_table" "private"{vpc_id=aws_vpc.main.id route{cidr_block="0.0.0.0/0" nat_gateway_id=aws_nat_gateway.main.id}}
+resource "aws_route_table_association" "public"{for_each=aws_subnet.public subnet_id=each.value.id route_table_id=aws_route_table.public.id}
+resource "aws_route_table_association" "private"{for_each=aws_subnet.private subnet_id=each.value.id route_table_id=aws_route_table.private.id}
+resource "aws_security_group" "alb"{name="${local.name}-alb" vpc_id=aws_vpc.main.id ingress{from_port=80 to_port=80 protocol="tcp" cidr_blocks=["0.0.0.0/0"]} egress{from_port=0 to_port=0 protocol="-1" cidr_blocks=["0.0.0.0/0"]}}
+resource "aws_security_group" "app"{name="${local.name}-app" vpc_id=aws_vpc.main.id ingress{from_port=var.container_port to_port=var.container_port protocol="tcp" security_groups=[aws_security_group.alb.id]} egress{from_port=0 to_port=0 protocol="-1" cidr_blocks=["0.0.0.0/0"]}}
+resource "aws_ecr_repository" "app"{name=local.name image_tag_mutability="IMMUTABLE" force_delete=true image_scanning_configuration{scan_on_push=true} encryption_configuration{encryption_type="AES256"}}
+resource "aws_ecr_lifecycle_policy" "app"{repository=aws_ecr_repository.app.name policy=jsonencode({rules=[{rulePriority=1,description="Keep 30 images",selection={tagStatus="any",countType="imageCountMoreThan",countNumber=30},action={type="expire"}}]})}
+resource "aws_cloudwatch_log_group" "app"{name="/ecs/${local.name}" retention_in_days=30}
+resource "aws_iam_role" "execution"{name="${local.name}-execution" assume_role_policy=jsonencode({Version="2012-10-17",Statement=[{Effect="Allow",Principal={Service="ecs-tasks.amazonaws.com"},Action="sts:AssumeRole"}]})}
+resource "aws_iam_role_policy_attachment" "execution"{role=aws_iam_role.execution.name policy_arn="arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"}
+resource "aws_iam_role" "task"{name="${local.name}-task" assume_role_policy=aws_iam_role.execution.assume_role_policy}
+resource "aws_ecs_cluster" "main"{name=local.name setting{name="containerInsights" value="enabled"}}
+resource "aws_lb" "main"{name=substr(local.name,0,32) load_balancer_type="application" subnets=values(aws_subnet.public)[*].id security_groups=[aws_security_group.alb.id] drop_invalid_header_fields=true}
+resource "aws_lb_target_group" "app"{name=substr("${local.name}-tg",0,32) port=var.container_port protocol="HTTP" vpc_id=aws_vpc.main.id target_type="ip" health_check{path="/healthz" matcher="200"}}
+resource "aws_lb_listener" "http"{load_balancer_arn=aws_lb.main.arn port=80 protocol="HTTP" default_action{type="forward" target_group_arn=aws_lb_target_group.app.arn}}
+resource "aws_ecs_task_definition" "app"{family=local.name network_mode="awsvpc" requires_compatibilities=["FARGATE"] cpu="256" memory="512" execution_role_arn=aws_iam_role.execution.arn task_role_arn=aws_iam_role.task.arn container_definitions=jsonencode([{name="api",image=var.container_image,essential=true,portMappings=[{containerPort=var.container_port}],environment=[{name="ENVIRONMENT",value=var.environment}],logConfiguration={logDriver="awslogs",options={"awslogs-group"=aws_cloudwatch_log_group.app.name,"awslogs-region"=var.aws_region,"awslogs-stream-prefix"="api"}}}])}
+resource "aws_ecs_service" "app"{name=local.name cluster=aws_ecs_cluster.main.id task_definition=aws_ecs_task_definition.app.arn desired_count=var.desired_count launch_type="FARGATE" enable_execute_command=true health_check_grace_period_seconds=60 deployment_circuit_breaker{enable=true rollback=true} network_configuration{subnets=values(aws_subnet.private)[*].id security_groups=[aws_security_group.app.id]} load_balancer{target_group_arn=aws_lb_target_group.app.arn container_name="api" container_port=var.container_port} depends_on=[aws_lb_listener.http] lifecycle{ignore_changes=[desired_count]}}
+resource "aws_appautoscaling_target" "ecs"{max_capacity=6 min_capacity=2 resource_id="service/${aws_ecs_cluster.main.name}/${aws_ecs_service.app.name}" scalable_dimension="ecs:service:DesiredCount" service_namespace="ecs"}
+resource "aws_appautoscaling_policy" "cpu"{name="${local.name}-cpu" policy_type="TargetTrackingScaling" resource_id=aws_appautoscaling_target.ecs.resource_id scalable_dimension=aws_appautoscaling_target.ecs.scalable_dimension service_namespace=aws_appautoscaling_target.ecs.service_namespace target_tracking_scaling_policy_configuration{target_value=60 predefined_metric_specification{predefined_metric_type="ECSServiceAverageCPUUtilization"}}}
+resource "aws_sns_topic" "alerts"{name="${local.name}-alerts"}
+resource "aws_sns_topic_subscription" "email"{count=var.alarm_email==""?0:1 topic_arn=aws_sns_topic.alerts.arn protocol="email" endpoint=var.alarm_email}
+resource "aws_cloudwatch_metric_alarm" "cpu"{alarm_name="${local.name}-high-cpu" comparison_operator="GreaterThanThreshold" evaluation_periods=3 metric_name="CPUUtilization" namespace="AWS/ECS" period=60 statistic="Average" threshold=80 alarm_actions=[aws_sns_topic.alerts.arn] dimensions={ClusterName=aws_ecs_cluster.main.name ServiceName=aws_ecs_service.app.name} treat_missing_data="notBreaching"}

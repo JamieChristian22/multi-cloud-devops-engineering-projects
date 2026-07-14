@@ -1,0 +1,3 @@
+grafana: {adminPassword: devops-local-admin}
+prometheus: {prometheusSpec: {retention: 7d, serviceMonitorSelectorNilUsesHelmValues: false, ruleSelectorNilUsesHelmValues: false}}
+alertmanager: {enabled: true}

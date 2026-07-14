@@ -1,0 +1,9 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata: {name: platform-collector}
+spec:
+  config:
+    receivers: {otlp: {protocols: {grpc: {}, http: {}}}}
+    processors: {batch: {}, memory_limiter: {limit_mib: 256}}
+    exporters: {debug: {verbosity: basic}}
+    service: {pipelines: {traces: {receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug]}}}

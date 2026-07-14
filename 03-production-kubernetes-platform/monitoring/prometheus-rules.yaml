@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata: {name: devops-api-slo}
+spec:
+  groups:
+    - name: devops-api
+      rules:
+        - alert: DevOpsAPIHighErrorRate
+          expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.02
+          for: 10m
+          labels: {severity: page}
+          annotations: {summary: "API error rate exceeds 2%"}
+        - alert: DevOpsAPIHighLatency
+          expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.5
+          for: 10m
+          labels: {severity: ticket}
+          annotations: {summary: "p95 latency exceeds 500 ms"}
