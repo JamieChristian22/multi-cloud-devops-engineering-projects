@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: devops-api}
+spec:
+ replicas: 2
+ template:
+  spec:
+   containers:
+    - name: api
+      env: [{name: ENVIRONMENT, value: staging}, {name: APP_VERSION, value: 1.0.0}]

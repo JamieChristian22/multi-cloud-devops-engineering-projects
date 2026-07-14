@@ -1,0 +1,10 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata: {name: devops-platform, namespace: argocd}
+spec:
+ description: DevOps portfolio applications
+ sourceRepos: ['*']
+ destinations: [{namespace: 'devops-*', server: https://kubernetes.default.svc}]
+ clusterResourceWhitelist: [{group: '', kind: Namespace}]
+ namespaceResourceWhitelist: [{group: apps, kind: Deployment}, {group: '', kind: Service}, {group: networking.k8s.io, kind: NetworkPolicy}]
+ orphanedResources: {warn: true}

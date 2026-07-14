@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: devops-api}
+spec:
+ replicas: 3
+ template:
+  spec:
+   containers:
+    - name: api
+      env: [{name: ENVIRONMENT, value: prod}, {name: APP_VERSION, value: 1.0.0}]

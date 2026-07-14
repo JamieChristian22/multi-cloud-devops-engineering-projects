@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata: {name: devops-api}
+spec:
+  replicas: 3
+  selector: {matchLabels: {app: devops-api}}
+  template:
+    metadata: {labels: {app: devops-api}}
+    spec:
+      securityContext: {runAsNonRoot: true, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: api
+          image: ghcr.io/jamiechristian22/devops-api:sha-0000000
+          ports: [{containerPort: 8000}]
+          resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+  strategy:
+    canary:
+      stableService: devops-api-stable
+      canaryService: devops-api-canary
+      steps:
+        - setWeight: 10
+        - pause: {duration: 2m}
+        - setWeight: 25
+        - pause: {duration: 5m}
+        - analysis: {templates: [{templateName: success-rate}]}
+        - setWeight: 50
+        - pause: {duration: 10m}

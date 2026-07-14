@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata: {name: devops-api-environments, namespace: argocd}
+spec:
+ generators:
+  - list:
+     elements: [{environment: dev}, {environment: staging}, {environment: prod}]
+ template:
+  metadata: {name: 'devops-api-{{environment}}', labels: {environment: '{{environment}}'}}
+  spec:
+   project: devops-platform
+   source: {repoURL: REPOSITORY_URL, targetRevision: main, path: '04-argocd-gitops-platform/apps/devops-api/overlays/{{environment}}'}
+   destination: {server: https://kubernetes.default.svc, namespace: 'devops-{{environment}}'}
+   syncPolicy:
+    automated: {prune: true, selfHeal: true, allowEmpty: false}
+    syncOptions: [CreateNamespace=true, ApplyOutOfSyncOnly=true, PruneLast=true]

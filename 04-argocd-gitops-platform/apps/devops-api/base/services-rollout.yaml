@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata: {name: devops-api-stable}
+spec: {selector: {app: devops-api}, ports: [{port: 80, targetPort: 8000}]}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: devops-api-canary}
+spec: {selector: {app: devops-api}, ports: [{port: 80, targetPort: 8000}]}

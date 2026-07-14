@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: {name: argocd-notifications-cm, namespace: argocd}
+data:
+  trigger.on-sync-failed: |
+    - description: Application sync failed
+      send: [app-sync-failed]
+      when: app.status.operationState.phase in ['Error', 'Failed']
+  template.app-sync-failed: |
+    message: Application {{.app.metadata.name}} sync failed.
