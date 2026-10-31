@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest a documentation, automation, or engineering improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggestions are welcome. Please focus on safe, reproducible educational use cases. Implementation is not guaranteed.
+  - type: input
+    id: project
+    attributes:
+      label: Relevant project or component
+      placeholder: "Terraform foundation, CI/CD, container platform, GitOps..."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: Describe the limitation or learning need.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: Describe how the suggestion would work and why it would help.
+    validations:
+      required: true
+  - type: textarea
+    id: considerations
+    attributes:
+      label: Security, testing, and maintenance considerations
+      description: Include potential risks and validation approaches if applicable.
+    validations:
+      required: false
