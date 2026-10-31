@@ -1,0 +1,45 @@
+name: Bug report
+description: Report a reproducible issue with a documented project or example
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Do not include credentials, personal information, or sensitive vulnerability details. Follow SECURITY.md for private security disclosures.
+  - type: input
+    id: project
+    attributes:
+      label: Project or component
+      description: Identify the relevant subproject, workflow, or file.
+      placeholder: "02-cicd-automation-platform / workflow name"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide a safe, reproducible example using non-sensitive inputs.
+      placeholder: "1. ...\n2. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and relevant logs
+      description: Remove secrets, tokens, addresses, and other sensitive information.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment and versions
+      placeholder: "OS, Terraform, Kubernetes, CLI, Python versions"
+    validations:
+      required: false
