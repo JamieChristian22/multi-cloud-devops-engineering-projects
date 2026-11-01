@@ -19,6 +19,33 @@
 
 ---
 
+## Quick review — four DevOps project tracks
+
+[![Repository CI](https://github.com/JamieChristian22/multi-cloud-devops-engineering-projects/actions/workflows/portfolio-ci.yml/badge.svg)](https://github.com/JamieChristian22/multi-cloud-devops-engineering-projects/actions/workflows/portfolio-ci.yml)
+
+| Project | Focus | Start here and inspect |
+| --- | --- | --- |
+| [01 · Terraform enterprise deployment](01-terraform-enterprise-deployment/README.md) | Modules, infrastructure planning, cost and rollback | [Architecture](01-terraform-enterprise-deployment/docs/ARCHITECTURE.md) · [Evidence log](01-terraform-enterprise-deployment/docs/EVIDENCE-LOG.md) |
+| [02 · Secure CI/CD automation](02-secure-cicd-automation-platform/README.md) | Automated delivery, software supply chain, security headers | [Threat model](02-secure-cicd-automation-platform/docs/THREAT-MODEL.md) · [Tests](02-secure-cicd-automation-platform/tests/test_api.py) |
+| [03 · Kubernetes platform](03-production-kubernetes-platform/README.md) | Containers, Helm, policy and operational recovery | [Evidence log](03-production-kubernetes-platform/docs/EVIDENCE-LOG.md) · [Test suite](03-production-kubernetes-platform/app/tests/test_api.py) |
+| [04 · Argo CD GitOps](04-argocd-gitops-platform/README.md) | Reconciliation, progressive promotion and rollback | [Evidence log](04-argocd-gitops-platform/docs/EVIDENCE-LOG.md) · [Verification script](04-argocd-gitops-platform/scripts/verify-reconciliation.sh) |
+
+**Reviewer route:** Start with the [five-minute guide](docs/RECRUITER-QUICKSTART.md), select one project, read its architecture, then compare its code, tests, deployment steps, and evidence log. For local syntax checks from the repository root:
+
+```bash
+make validate
+```
+
+The validator checks Python/JSON/shell syntax and can check YAML and other tools when installed. Its optional Terraform/Helm checks **may be skipped**, so an exit code of zero does not prove a successful production deployment.
+
+A new [GitHub Actions validation workflow](.github/workflows/portfolio-ci.yml) runs source syntax checks and the existing test suites for Projects 01–03. No CI pass is claimed until the workflow actually reports success. Cloud deployment, Kubernetes cluster setup and Argo CD reconciliation require separate environments and are **not validated by that CI**.
+
+**Evidence disclosure:** This is an enterprise-inspired **portfolio simulation and hands-on learning repository**. Architecture diagrams, demo configurations, and local checks are not evidence of deployed multi-cloud production systems. Inspect each project's evidence log for what was actually executed. Local bytecode artifacts were removed and ignored; operational inputs must use examples rather than real credentials.
+
+[Portfolio website](https://jamiechristian22.github.io/) · [GitHub Sponsors](https://github.com/sponsors/JamieChristian22)
+
+---
+
 # 📖 Overview
 
 Welcome to my **Multi-Cloud DevOps Engineering Projects** repository.
