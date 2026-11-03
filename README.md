@@ -499,3 +499,7 @@ Sponsorship is optional and helps with development time, testing, documentation,
 ## License and third-party materials
 
 See [LICENSE](LICENSE) for the repository license. Third-party code, datasets, images, and other assets retain their respective terms.
+
+## Reviewer guide and asset provenance
+
+Use [REVIEWER_GUIDE.md](REVIEWER_GUIDE.md) to navigate tracked evidence and review sample dataset/media source and reuse rights. Listings are not proof of ownership or license clearance.
