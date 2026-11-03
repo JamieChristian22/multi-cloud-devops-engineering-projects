@@ -9,7 +9,7 @@ spec:
   metadata: {name: 'devops-api-{{environment}}', labels: {environment: '{{environment}}'}}
   spec:
    project: devops-platform
-   source: {repoURL: REPOSITORY_URL, targetRevision: main, path: '04-argocd-gitops-platform/apps/devops-api/overlays/{{environment}}'}
+   source: {repoURL: https://github.com/JamieChristian22/multi-cloud-devops-engineering-projects.git, targetRevision: main, path: '04-argocd-gitops-platform/apps/devops-api/overlays/{{environment}}'}
    destination: {server: https://kubernetes.default.svc, namespace: 'devops-{{environment}}'}
    syncPolicy:
     automated: {prune: true, selfHeal: true, allowEmpty: false}
