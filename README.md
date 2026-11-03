@@ -495,3 +495,7 @@ Sponsorship is optional and helps with development time, testing, documentation,
 **Infrastructure as Code • Kubernetes • GitOps • CI/CD • Automation • DevSecOps**
 
 </div>
+
+## License and third-party materials
+
+See [LICENSE](LICENSE) for the repository license. Third-party code, datasets, images, and other assets retain their respective terms.
