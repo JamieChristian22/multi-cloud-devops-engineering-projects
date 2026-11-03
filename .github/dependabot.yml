@@ -1,0 +1,42 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      action-updates:
+        patterns: ["*"]
+  - package-ecosystem: pip
+    directory: "/01-terraform-enterprise-deployment/app"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      python-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: pip
+    directory: "/02-secure-cicd-automation-platform"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      python-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: pip
+    directory: "/03-production-kubernetes-platform/app"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      python-dependencies:
+        patterns: ["*"]
+  - package-ecosystem: pip
+    directory: "/04-argocd-gitops-platform/app"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 1
+    groups:
+      python-dependencies:
+        patterns: ["*"]
