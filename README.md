@@ -19,6 +19,19 @@
 
 ---
 
+## Infrastructure validation that fails honestly
+
+The [offline GitOps tests](./tests/test_gitops_contracts.py) verify that the ApplicationSet points at this repository and references existing development, staging and production overlay files. The [optional IaC checker](./scripts/check-optional-iac.sh) skips a tool **only when it is not installed**; if installed, Terraform formatting or Helm lint failures now fail validation instead of being mislabeled as skipped.
+
+```bash
+make validate
+python -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+The Kubernetes chart now uses the single [ServiceMonitor definition](./03-production-kubernetes-platform/helm/devops-api/templates/monitoring.yaml) controlled by the documented values. Helm rendering, actual cluster deployment and infrastructure provisioning remain separate from offline configuration checks.
+
+---
+
 ## Quick review — four DevOps project tracks
 
 [![Repository CI](https://github.com/JamieChristian22/multi-cloud-devops-engineering-projects/actions/workflows/portfolio-ci.yml/badge.svg)](https://github.com/JamieChristian22/multi-cloud-devops-engineering-projects/actions/workflows/portfolio-ci.yml)
