@@ -15,5 +15,4 @@ except ImportError: print('Python and JSON syntax: PASS; install PyYAML for YAML
 PYVALID
 find . -type f -name '*.sh' -print0 | xargs -0 -n1 bash -n
 echo 'Shell syntax: PASS'
-command -v terraform >/dev/null && terraform fmt -check -recursive || echo 'Terraform fmt skipped (CLI unavailable)'
-command -v helm >/dev/null && helm lint 03-production-kubernetes-platform/helm/devops-api || echo 'Helm lint skipped (CLI unavailable)'
+bash scripts/check-optional-iac.sh
