@@ -21,7 +21,7 @@
 
 The **ArgoCD GitOps Platform** demonstrates an enterprise-grade GitOps implementation for managing Kubernetes infrastructure and application deployments across multiple cloud providers.
 
-Using **ArgoCD** as the GitOps controller, every infrastructure and application change is version-controlled, automatically synchronized, continuously validated, and deployed directly from Git.
+This repository contains **Argo CD GitOps configuration examples** for version-controlled application delivery. Deployment and continuous synchronization occur only when an authorized cluster, compatible controllers, container images and repository access are configured; they are **not proven by these source files**.
 
 This project demonstrates how modern platform engineering teams eliminate manual deployments while improving reliability, auditability, consistency, and security through declarative infrastructure management.
 
@@ -122,41 +122,23 @@ This project demonstrates how modern platform engineering teams eliminate manual
 
 ---
 
-# 📂 Repository Structure
+# 📂 Actual Repository Structure
 
 ```text
 04-argocd-gitops-platform/
-
-│
-├── argocd/
-│   ├── applications/
-│   ├── applicationsets/
-│   ├── projects/
-│   ├── repositories/
-│   ├── clusters/
-│   └── bootstrap/
-│
-├── kubernetes/
-│
-├── helm/
-│
-├── terraform/
-│
-├── monitoring/
-│
-├── security/
-│
-├── scripts/
-│
-├── docs/
-│
-├── diagrams/
-│
-├── screenshots/
-│
-├── README.md
-└── LICENSE
+├── app/               # Example FastAPI workload
+├── apps/devops-api/
+│   ├── base/          # Kubernetes base manifests
+│   └── overlays/      # dev, staging, prod patches
+├── argocd/            # ApplicationSet, AppProject, root Application
+├── docs/              # Architecture, evidence logs, rollback guidance
+├── policies/          # Rego security-policy examples
+├── scripts/           # Bootstrap, diff, promotion and recovery scripts
+└── README.md
 ```
+
+[Offline GitOps manifest tests](../tests/test_gitops_contracts.py) check references among these folders and the public Git source URL. **They do not deploy or synchronize any cluster.**
+
 
 ---
 
@@ -447,7 +429,7 @@ This project supports portfolios for:
 
 ---
 
-# 📜 Certifications Supported
+# 📜 Related Certification Learning Topics
 
 - Certified Kubernetes Administrator (CKA)
 - Certified Kubernetes Application Developer (CKAD)
