@@ -8,3 +8,5 @@ networkPolicy: {enabled: true}
 serviceMonitor: {enabled: false}
 prometheusRule: {enabled: false}
 env: {ENVIRONMENT: kubernetes, APP_VERSION: 1.0.0}
+
+ingress: {enabled: false, className: nginx, host: devops.example.invalid}
