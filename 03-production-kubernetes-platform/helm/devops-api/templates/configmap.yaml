@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: {{ include "devops-api.fullname" . }}
 data:
-  APP_ENV: {{ .Values.environment | quote }}
+  APP_ENV: {{ .Values.env.ENVIRONMENT | quote }}
