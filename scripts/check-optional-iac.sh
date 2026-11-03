@@ -11,6 +11,10 @@ fi
 
 if command -v helm >/dev/null 2>&1; then
   helm lint 03-production-kubernetes-platform/helm/devops-api
+  for environment in dev staging prod; do
+    helm lint 03-production-kubernetes-platform/helm/devops-api \
+      --values "03-production-kubernetes-platform/environments/${environment}/values.yaml"
+  done
   echo "PASS: Helm chart lint"
 else
   echo "SKIP: Helm CLI unavailable (chart not verified)"
