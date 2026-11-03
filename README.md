@@ -62,7 +62,7 @@ Every project emphasizes:
 - Cloud Security
 - Observability
 - Automation
-- Production Deployments
+- Deployment design and validation
 - DevSecOps Best Practices
 
 These projects are designed to demonstrate the technical skills expected from modern:
@@ -107,11 +107,11 @@ multi-cloud-devops-engineering-projects/
 │
 ├── 01-terraform-enterprise-deployment/
 │
-├── 02-cicd-automation-platform/
+├── 02-secure-cicd-automation-platform/
 │
-├── 03-container-platform/
+├── 03-production-kubernetes-platform/
 │
-├── 04-gitops-platform/
+├── 04-argocd-gitops-platform/
 │
 ├── LICENSE
 ├── README.md
@@ -131,7 +131,7 @@ multi-cloud-devops-engineering-projects/
 
 ### Objective
 
-Provision production-ready cloud infrastructure using Infrastructure as Code.
+Model cloud infrastructure using Infrastructure as Code; deployment requires a separately configured, authorized environment.
 
 ### Technologies
 
@@ -417,9 +417,9 @@ This portfolio supports positions including:
 
 ---
 
-# 📜 Certifications Supported
+# 📜 Related Certification Learning Topics
 
-This repository aligns with:
+These topics align with the following certification syllabi; this list does **not** claim the author holds these certifications:
 
 - AWS Certified DevOps Engineer Professional
 - AWS Solutions Architect
