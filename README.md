@@ -1,5 +1,12 @@
 # 🚀 Multi-Cloud DevOps Engineering Projects
 
+DevOps engineering portfolio covering Terraform, CI/CD with GitHub Actions, Kubernetes, Helm and GitOps. Offline contract checks are distinct from live cluster deployments or cloud provisioning.
+
+**Explore related projects:** [cloud platform engineering lab](https://github.com/JamieChristian22/cloud-platform-engineering-lab) · [aws vpc terraform lab](https://github.com/JamieChristian22/aws-vpc-terraform-lab)
+
+[Recruiter quick-start guide](https://github.com/JamieChristian22/JamieChristian22/blob/main/RECRUITER_START_HERE.md) · [Portfolio website](https://jamiechristian22.github.io/)
+
+
 <div align="center">
 
 ![Terraform](https://img.shields.io/badge/Terraform-IaC-623CE4?style=for-the-badge&logo=terraform)
