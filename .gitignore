@@ -18,3 +18,19 @@ crash.log
 .DS_Store
 .idea/
 .vscode/
+
+# Local cloud credentials and sensitive infrastructure artifacts
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+*.tfplan
+*.tfplan.*
+terraform.rc
+.terraformrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+*.kubeconfig
